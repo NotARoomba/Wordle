@@ -55,7 +55,6 @@ bool checkWord(string *word) {
 void printGame(vector<string> board, vector<string> letters) {
     cout << "\033[1;32mWordle\033[1;32m\n";
     cout << "+----------------+\n";
-    cout << board[0] << endl;
     for (int i = 0; i < board.size(); i++) {
 		cout << "|" + board[i] + "|\n";
     }
@@ -87,7 +86,6 @@ int main() {
     vector<char> lettersCheck = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
     vector<string> board = { "-----", "-----", "-----", "-----", "-----", "-----" };
     string word = getWord();
-    cout << board[0] << endl;
     //tries
 	for (int i = 0; i < 6; i++) {
         string guess = getInput();
@@ -95,14 +93,14 @@ int main() {
         for (int f = 0; f < guess.length(); f++) {
             for (int g = 0; g < word.length(); g++) {
                 if (word[g] == guess[f]) {
-                    board[i][f] = *"\033[1;32m" + guess[f];
+                    board[i] = "\033[1;32m" + guess[f];
                     letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()] = "\033[1;32m" + letters[find(lettersCheck.begin(),lettersCheck.end(), guess[f]) - lettersCheck.begin()];
                 } else if (word.find(guess[f])) {
                     cout << word << endl << guess << endl;
-                    board[i][f] = *"\033[1;33m" + guess[f];
+                    board[i][f] = "\033[1;33m" + guess[f];
                     letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()] = "\033[1;33m" + letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()];
                 } else {
-                    board[i][f] = *"\033[1;30m" + guess[f];
+                    board[i][f] = "\033[1;30m" + guess[f];
                     letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()] = "\033[1;30m" + letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()];
                 }
             }
