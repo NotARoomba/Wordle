@@ -1,6 +1,3 @@
-// Wordle.cpp : This file contains the "main" function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -92,30 +89,10 @@ int main() {
         // for each letter in the guess it checks for matching characters and highlights them green else yellow or grey
         for (int f = 0; f < guess.length(); f++) {
             for (int g = 0; g < word.length(); g++) {
-                if (word[g] == guess[f]) {
-                    board[i] = "\033[1;32m" + guess[f];
-                    letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()] = "\033[1;32m" + letters[find(lettersCheck.begin(),lettersCheck.end(), guess[f]) - lettersCheck.begin()];
-                } else if (word.find(guess[f])) {
-                    cout << word << endl << guess << endl;
-                    board[i][f] = "\033[1;33m" + guess[f];
-                    letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()] = "\033[1;33m" + letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()];
-                } else {
-                    board[i][f] = "\033[1;30m" + guess[f];
-                    letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()] = "\033[1;30m" + letters[find(lettersCheck.begin(), lettersCheck.end(), guess[f]) - lettersCheck.begin()];
-                }
+				//TODO 
+				//WORDLE LOGIC
             }
         }
 		printGame(board, letters);
 	}
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
