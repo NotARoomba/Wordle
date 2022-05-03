@@ -15,7 +15,7 @@ string getWord() {
     ifstream File("words.txt");
 
     srand(time(0));
-    random = rand() % 50;
+    random = rand() % 12972;
 
     while (getline(File, line))
     {
@@ -28,32 +28,28 @@ string getWord() {
 
     }
 }
-bool checkWord(string *word) {
+bool checkWord(string word) {
     string line;
-    int random = 0;
     int numOfLines = 0;
     ifstream File("words.txt");
-
-    srand(time(0));
-    random = rand() % 12972;
 
     while (getline(File, line))
     {
         ++numOfLines;
 
-        if (line == *word)
+        if (line == word)
         {
-            return true;
+            return false;
         }
 
     }
-    return false;
+    return true;
 }
 void printGame(vector<string> board, vector<string> letters) {
     cout << "\033[1;32mWordle\033[1;32m\n";
     cout << "+----------------+\n";
     for (int i = 0; i < board.size(); i++) {
-		cout << "|" + board[i] + "|\n";
+		cout << "|" + (string) board[i] + "|\n";
     }
     cout << "+----------------+\n\033[1;30m";
     for (int i = 0; i < letters.size(); i++) {
@@ -68,11 +64,11 @@ string getInput() {
     cin >> guess;
     if (guess.length() != 5) {
         cout << "Enter a word that is 5 letters long...\n";
-        getInput();
+        guess = getInput();
     }
-    if (checkWord(&guess)) {
+    if (checkWord(guess)) {
 		cout << "That word is not valid...\n";
-		getInput();
+		guess = getInput();
     }
     return guess;
 }
@@ -80,19 +76,32 @@ string getInput() {
 int main() {
     cout << "\033[1;32mWordle\033[1;32m\n";
     vector<string> letters = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "\0" };
-    vector<char> lettersCheck = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+    vector<char> lettersCheck = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\0'};
     vector<string> board = { "-----", "-----", "-----", "-----", "-----", "-----" };
     string word = getWord();
-    //tries
 	for (int i = 0; i < 6; i++) {
         string guess = getInput();
-        // for each letter in the guess it checks for matching characters and highlights them green else yellow or grey
-        for (int f = 0; f < guess.length(); f++) {
+        board[i] = "";
             for (int g = 0; g < word.length(); g++) {
-				//TODO 
-				//WORDLE LOGIC
+                int it = std::find(lettersCheck.begin(), lettersCheck.end(), guess[g]) - lettersCheck.begin();;
+                if (word[g] == guess[g]) {
+					board[i] += (string) "\033[1;32m" + guess[g] + (string) "\033[1;32m";
+                    letters[it] = (string)"\033[1;32m" + guess[g] + (string)"\033[1;32m";
+                }
+                else if (word.find(guess[g]) != string::npos) {
+                    board[i] += (string)"\033[1;33m" + guess[g] + (string)"\033[1;32m";
+                    letters[it] = (string)"\033[1;33m" + guess[g] + (string)"\033[1;32m";
+                }
+                else {
+                    board[i] += (string)"\033[1;30m" + guess[g] + (string)"\033[1;32m";
+                    letters[it] = (string)"\033[1;31m" + guess[g] + (string)"\033[1;32m";
+                }
             }
-        }
 		printGame(board, letters);
+        if (word == guess) {
+            cout << "You win!\nThe word was " + word + "\n";
+            return 0;
+        }
 	}
+    cout << "You lose!\nThe word was " + word + "\n";
 }
