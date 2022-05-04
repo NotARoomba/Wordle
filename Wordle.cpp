@@ -15,7 +15,7 @@ string getWord() {
     ifstream File("words.txt");
 
     srand(time(0));
-    random = rand() % 12972;
+    random = rand() % 12947;
 
     while (getline(File, line))
     {
