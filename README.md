@@ -1,3 +1,3 @@
 # WordleCli
-C++ cli worldle
+C++ Cli wordle
 Check releases for executables
