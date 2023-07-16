@@ -5,46 +5,80 @@ html {
   height: 100%;
   text-align: center;
   font-family: Inter;
-  background-color: #1B2021;
+  background-color: #1f1f1f;
   color: #E5E5E5;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   overflow-x: hidden;
 }
 body {
   position: relative;
   margin: 0px;
   height: 100%;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   overflow-x: hidden;
 }
 .top-text {
   margin: 10px;
   font-size: 4vw;
   font-weight: 700;
-  margin-bottom: 50px;
 }
 .top-text > p {
   margin: 10px;
 }
 .words-box {
   display: grid;
+  margin-top: 20px;
+  margin-bottom: 40px;
 }
-.word {
+.word-complete,.word-uncomplete,.word-inprogress {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .tile {
-  font-size: 2.5vw;
+  font-size: 24px;
   font-weight: bold;
   padding: 5px;
   margin: 2.5px;
-  border-radius: 10px;
-  background-color: #FFD9DA;
+  border-radius: 5px;
+  background-color: #1f1f1f;
+  border-color: #30343F;
+  border-style:solid;
+  border-width: 2px;
 }
 .tile > p {
   margin: 0;
-  min-width: 40px;
-  min-height: 40px;
-  color: #30343F;
+  min-width: 32px;
+  min-height: 32px;
+  color: #FFD9DA;
 }
+
+.keyboard-row{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.key {
+  font-weight: bold;
+  padding:15px;
+  height: 20px;
+  background-color: #30343F;
+  border-radius: 5px;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 4px;
+  justify-content: center;
+  cursor: pointer;
+}
+.key > p {
+  margin: 0;
+  padding-bottom: 10px;
+}
+.key > img {
+  max-height: 22px;
+  filter: invert(96%) sepia(1%) saturate(2248%) hue-rotate(202deg) brightness(110%) contrast(80%);
+}
+

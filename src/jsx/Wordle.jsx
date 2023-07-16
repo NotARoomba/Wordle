@@ -1,40 +1,33 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import Word from './Word.jsx'
+import Grid from "./Grid.jsx"
+import Keyboard from './Keyboard.jsx';
 
 import '../css/App.css'
 
 export default function Wordle() {
-  useEffect(() => {
-    function handleKeyDown(e) {
-      console.log(e.key);
-      for (let child in $(".words-box")[0].children) {
-        console.log($(".words-box")[0].children)
-        if (child.textContent.length != 5) {
-          child.textContent += e.key;
-        }
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown);
-    return function cleanup() {
-      document.removeEventListener('keydown', handleKeyDown);
-    }
-  }, []);
+  const answer = "fires"
+  const [currentGuess, setCurrentGuess] = useState("")
+  const [guesses, setGuesses] = useState(Array())
+  // const [currentGuess, setGuessCount] = useState(0)
+  // let [guesses, setGuess] = useState(Array(maxGuess).fill(""))
+  
+  const onChar = (value) => {
+    console.log(value)
+  }
+  const onDelete = (value) => {
+    console.log("DELETE")
+  }
+  const onEnter = (value) => {
+    console.log("ENTER")
+  }
   return (
     <>
       <div className="top-text">
         <p>Wordle</p>
       </div>
-      <div className="words-box">
-        <Word word={"aaaa"}/>
-        <Word word={""}/>
-        <Word word={""}/>
-        <Word word={""}/>
-        <Word word={""}/>
-        <Word word={""}/>
-      </div>
-      <div className="keyboard-box">
-      </div>
+      <Grid guesses={guesses} currentGuess={currentGuess}/>
+      <Keyboard onChar={onChar} onDelete={onDelete} onEnter={onEnter}/>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default function Tile(props) {
+export default function Tile({letter}) {
   return (<div className="tile">
-      <p>{props.letter}</p>
+      <p>{letter}</p>
   </div>)
 } 
