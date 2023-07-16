@@ -1,4 +1,2 @@
-module.exports = {
-    MAX_GUESSES: 6,
-    WORD_SIZE: 5
-}
+export const MAX_GUESSES = 6
+export const WORD_SIZE = 5  
