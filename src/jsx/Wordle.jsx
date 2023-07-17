@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { Suspense, startTransition, useEffect, useRef, useState } from 'react'
 
 import Grid from "./components/grid/Grid.jsx"
 import Keyboard from './components/keyboard/Keyboard.jsx'
@@ -10,6 +10,23 @@ import Statistics from './components/modals/Statistics.jsx';
 
 import Modal from 'react-modal';
 
+class GameData {
+  stats = {
+    guessDistribution: [],
+    gamesWon: 0,
+    currentStreak: 0,
+    maxStreak: 0,
+    totalGames: 0,
+    successRate: 0
+  }
+  constructor(stats) {
+    if (stats == null) return null
+    this.stats = stats;
+    return this
+  }
+}
+
+
 Modal.setAppElement('#root');
 export default function Wordle() {
   const [answer, setAnswer] = useState(WORDS[Math.floor(Math.random()*WORDS.length)].toUpperCase())
@@ -19,7 +36,7 @@ export default function Wordle() {
   const [reveal, setReveal] = useState(false)
   const [modalOpen, setModal] = useState(false)
   const [gameState, setGameState] = useState([false, false])
-  const [statistics, setStatistics] = useState({});
+  const [statistics, setStatistics] = useState(new GameData);
   //const [isChecking, setChecking] = useState(false)
   const guessRef = useRef();
   guessRef.current = currentGuess;
@@ -33,7 +50,8 @@ export default function Wordle() {
   statisticsRef.current = statistics
   useEffect(() => {
     let stats = localStorage.getItem("statistics")
-    setStatistics(stats != null?JSON.parse(stats) : null)
+    console.log("NEW", new GameData({...JSON.parse(stats)}))
+    setStatistics(stats != null?new GameData({...JSON.parse(stats)}) : new GameData())
   }, [])
   useEffect(() => {
     console.log(statistics)
@@ -106,9 +124,10 @@ export default function Wordle() {
   }
   function updateStatistics(won) {
     let stats = {};
-    if (!statistics) {
+    console.log(statistics)
+    if (statistics.stats.gamesWon == null) {
       stats = {
-        guessDistribution: [guessRef.current.length+1],
+        guessDistribution: [guessesRef.current.length+1],
         gamesWon: won?1:0,
         currentStreak: won?1:0,
         maxStreak: won?1:0,
@@ -116,19 +135,19 @@ export default function Wordle() {
         successRate: won?100:0
       }
     } else {
-      let currentStreak = won?statisticsRef.current.currentStreak+1:0;
-      let gamesWon = statisticsRef.current.gamesWon+(won?1:0);
-      let totalGames = statisticsRef.current.totalGames+1;
+      let currentStreak = won?statisticsRef.current.stats.currentStreak+1:0;
+      let gamesWon = statisticsRef.current.stats.gamesWon+(won?1:0);
+      let totalGames = statisticsRef.current.stats.totalGames+1;
        stats =  {
-        guessDistribution: [...statisticsRef.current.guessDistribution, guessRef.current.length+1],
+        guessDistribution: [...statisticsRef.current.stats.guessDistribution, guessesRef.current.length+1],
         gamesWon,
         currentStreak,
-        maxStreak: Math.max(currentStreak, statisticsRef.current.currentStreak),
+        maxStreak: Math.max(currentStreak, statisticsRef.current.stats.currentStreak),
         totalGames,
-        successRate: (gamesWon/totalGames)*100
+        successRate: Math.round((gamesWon/totalGames)*100)
       }
     }
-    setStatistics(stats)
+    setStatistics(new GameData({...stats}))
     localStorage.setItem("statistics", JSON.stringify(stats))
   }
   return (
