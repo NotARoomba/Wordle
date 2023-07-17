@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Tile from './Tile.jsx'
-import { getLetterTypes } from './Constants.jsx';
+import { getGuessTypes } from './Constants.jsx';
 
 export default function Word({status, word, answer}) {
   if(status == "complete") {
-    const letterTypes = getLetterTypes(answer, word)
+    const guessTypes = getGuessTypes(answer, word)
     return (
       <div className={("word-" + status)}>
         {[...word].map((g, i) => (
-          <Tile key={i} letter={g} type={letterTypes[i]}/>
+          <Tile key={i} letter={g} type={guessTypes[i]}/>
         ))}
       </div>
     )

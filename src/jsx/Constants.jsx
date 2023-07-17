@@ -1,19 +1,48 @@
 export const MAX_GUESSES = 6
 export const WORD_SIZE = 5  
-export const getLetterTypes = (answer, word) => {
-    let letterType = []
+export const getLetterTypes = (answer, guesses) => {
+    let letterObj = new Object()
+    for (let guess in guesses) {
+       let guessTypes = getGuessTypes(answer, guess);
+       [...answer].forEach((l, i) => {
+        if (!letterObj[l]) {
+            letterObj[l] = guessTypes[i]
+            return;
+        }
+        if (letterObj[l] < guessTypes[i]) {
+            letterObj[l] = guessTypes[i]
+            return;
+        }
+       })
+    }
+    return  letterObj
+}
+export const getGuessTypes = (answer, word) => {
+    let guessTypes = []
+    const lettersTaken = [...answer].map((_) => false)
     for (let i = 0; i < answer.length; i++) {
         //check if has word and is in exact pos
         //then change color of word
         if (answer[i] == word[i]) {
-            letterType.push(3)
-        } else if (answer.includes(word[i])) {
-            letterType.push(2)
+            lettersTaken[i] = true
+            guessTypes.push(3)
+            continue;
+        } 
+        if (!answer.includes(word[i])) {
+            guessTypes.push(1)
+            continue;
+        }
+        const letterIndex = [...answer].findIndex((v, i) => v==word[i] && !lettersTaken[i])
+        if (letterIndex == -1) {
+            guessTypes.push(2)
+            lettersTaken[letterIndex] = true;
+            continue;
         } else {
-            letterType.push(1)
+            guessTypes.push(1)
+            continue;
         }
     }
-    return letterType
+    return guessTypes
 }
 export const WORDS = [
     'which',

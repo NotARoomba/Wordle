@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import Key from "./Key";
 import { getLetterTypes } from "./Constants";
 
-export default function Keyboard({onChar, onEnter, onDelete, answer}) {
+export default function Keyboard({onChar, onEnter, onDelete, answer, guesses}) {
     useEffect(() => {
         function handleKeyDown(e) {
           if (e.key == "Backspace") return onDelete()
@@ -15,7 +15,7 @@ export default function Keyboard({onChar, onEnter, onDelete, answer}) {
           document.removeEventListener('keydown', handleKeyDown);
         }
       }, []);
-      const letterTypes = getLetterTypes(answer, "QWERTYUIOPASDFGHJKLZXCVBNM")
+      const letterTypes = getLetterTypes(answer, guesses)
     return (<div className="keyboard">
         <div  className={"keyboard-row"}> {[..."QWERTYUIOP"].map((k, i) => 
         (<Key key={k} value={k} onChar={onChar} type={letterTypes[i]}/>))}</div>

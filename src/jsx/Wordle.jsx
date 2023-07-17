@@ -63,7 +63,7 @@ export default function Wordle() {
         <p>Wordle</p>
       </div>
        <Grid guesses={guesses} currentGuess={currentGuess} answer={answer}/>
-      <Keyboard onChar={onChar} onDelete={onDelete} onEnter={onEnter} answer={answer}/>
+      <Keyboard onChar={onChar} onDelete={onDelete} onEnter={onEnter} answer={answer} guesses={guesses}/>
     </>
   )
 }
