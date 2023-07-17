@@ -1,69 +1,146 @@
-import { useRef, useState } from 'react'
+import { startTransition, useEffect, useRef, useState } from 'react'
 
-import Grid from "./Grid.jsx"
-import Keyboard from './Keyboard.jsx';
+import Grid from "./components/grid/Grid.jsx"
+import Keyboard from './components/keyboard/Keyboard.jsx'
+import Error from './Error.jsx';
 import { WORD_SIZE, WORDS, MAX_GUESSES } from './Constants.jsx';
 
 import '../css/App.css'
+import Statistics from './components/modals/Statistics.jsx';
 
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 export default function Wordle() {
   const [answer, setAnswer] = useState(WORDS[Math.floor(Math.random()*WORDS.length)].toUpperCase())
   const [currentGuess, setCurrentGuess] = useState("")
   const [guesses, setGuesses] = useState(Array())
+  const [error, setError] = useState(["", false])
+  const [reveal, setReveal] = useState(false)
+  const [modalOpen, setModal] = useState(false)
+  const [gameState, setGameState] = useState([false, false])
+  const [statistics, setStatistics] = useState({});
   //const [isChecking, setChecking] = useState(false)
   const guessRef = useRef();
   guessRef.current = currentGuess;
   const guessesRef = useRef();
   guessesRef.current = guesses;
-
+  const errorRef = useRef()
+  errorRef.current = error
+  const gameStateRef = useRef()
+  gameStateRef.current = gameState;
+  const statisticsRef = useRef()
+  statisticsRef.current = statistics
+  useEffect(() => {
+    let stats = localStorage.getItem("statistics")
+    setStatistics(stats != null?JSON.parse(stats) : null)
+  }, [])
+  useEffect(() => {
+    console.log(statistics)
+  }, [statistics])
   function onChar(value) {
+    if (gameStateRef.current[0]||gameStateRef.current[1]) return;
     if (guessRef.current.length+1 <= WORD_SIZE && guessesRef.current.length < MAX_GUESSES) {
       setCurrentGuess(guessRef.current+value)
     }
   }
-  const onDelete = () => {
+  function onDelete() {
       setCurrentGuess(Array.from(guessRef.current).slice(0, -1).join(""))
   }
-  const onEnter = () => {
+  function onEnter() {
+    if (gameStateRef.current[0]||gameStateRef.current[1]) return;
     if (guessRef.current.length !== WORD_SIZE) {
       //show error
-      console.log("WORD TOO SMALL")
+      if (!errorRef.current[1]) { 
+      setError(["Word too small", true])
+      setTimeout(() => {
+        setError(["Word too small", false])
+      }, 2000);
+    }
       return
     }
     if (!WORDS.includes(guessRef.current.toLowerCase())) {
       //error not found
-      console.log("WORD NOT FOUND")
+     if (!errorRef.current[1]) { 
+      setError(["Word not found", true])
+      setTimeout(() => {
+        setError(["Word not found", false])
+      }, 2000);
+    }
       return
     }
     if (guessRef.current.length == WORD_SIZE && guessesRef.current.length < MAX_GUESSES) {
-      console.log("ADDING GUESS")
+      console.log(answer)
       setGuesses([...guessesRef.current, guessRef.current])
+      setReveal(true)
+      setTimeout(() => {
+        setError(false)
+      }, 5000);
       setCurrentGuess("")
       
       if (guessRef.current == answer) {
-        console.log("GAME WON")
+        // setReveal(true)
+        setGameState([true, false])
+        updateStatistics(true)
+        setTimeout(() => {
+          openModal()
+        }, 4000);
         return
       }
-      if (guessesRef.current.length == MAX_GUESSES) {
-        console.log("GAME LOST")
-
+      if (guessesRef.current.length == MAX_GUESSES-1) {
+        // setReveal(true)
+        setGameState([false, true])
+        updateStatistics(false)
+        setTimeout(() => {
+          openModal()
+        }, 4000);
+        return
       }
-      // for (let i = 0; i < WORD_SIZE; i++) {
-      //   //check if has word and is in exact pos
-      //   //then change color of word
-      //   if (answer.includes(guessRef[i]) && answer[i] == guessRef[i]) {
-
-      //   }
-      // }
     }
+  }
+  function closeModal() {
+    setModal(false)
+  }
+  function openModal() {
+    setModal(true)
+  }
+  function updateStatistics(won) {
+    let stats = {};
+    if (!statistics) {
+      stats = {
+        guessDistribution: [guessRef.current.length+1],
+        gamesWon: won?1:0,
+        currentStreak: won?1:0,
+        maxStreak: won?1:0,
+        totalGames: 1,
+        successRate: won?100:0
+      }
+    } else {
+      let currentStreak = won?statisticsRef.current.currentStreak+1:0;
+      let gamesWon = statisticsRef.current.gamesWon+(won?1:0);
+      let totalGames = statisticsRef.current.totalGames+1;
+       stats =  {
+        guessDistribution: [...statisticsRef.current.guessDistribution, guessRef.current.length+1],
+        gamesWon,
+        currentStreak,
+        maxStreak: Math.max(currentStreak, statisticsRef.current.currentStreak),
+        totalGames,
+        successRate: (gamesWon/totalGames)*100
+      }
+    }
+    setStatistics(stats)
+    localStorage.setItem("statistics", JSON.stringify(stats))
   }
   return (
     <>
       <div className="top-text">
         <p>Wordle</p>
+        <button onClick={openModal}><img src="/assets/bar-chart.svg"/></button>
       </div>
-       <Grid guesses={guesses} currentGuess={currentGuess} answer={answer}/>
-      <Keyboard onChar={onChar} onDelete={onDelete} onEnter={onEnter} answer={answer} guesses={guesses}/>
+      <Statistics statistics={statistics} won={gameState[0]} answer={answer} modalOpen={modalOpen} closeModal={closeModal}/>
+        <Error desc={error}/>
+       <Grid guesses={guesses} currentGuess={currentGuess} answer={answer} error={error} reveal={reveal}/>
+      <Keyboard onChar={onChar} onDelete={onDelete} onEnter={onEnter} answer={answer} guesses={guesses} reveal={reveal}/>
     </>
   )
 }

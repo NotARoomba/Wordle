@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import Key from "./Key";
-import { getLetterTypes } from "./Constants";
+import { getLetterTypes } from "../../Constants";
 
-export default function Keyboard({onChar, onEnter, onDelete, answer, guesses}) {
+export default function Keyboard({onChar, onEnter, onDelete, answer, guesses, reveal}) {
     useEffect(() => {
         function handleKeyDown(e) {
           if (e.key == "Backspace") return onDelete()
@@ -17,14 +17,14 @@ export default function Keyboard({onChar, onEnter, onDelete, answer, guesses}) {
       }, []);
       const letterTypes = getLetterTypes(answer, guesses)
     return (<div className="keyboard">
-        <div  className={"keyboard-row"}> {[..."QWERTYUIOP"].map((k, i) => 
-        (<Key key={k} value={k} onChar={onChar} type={letterTypes[i]}/>))}</div>
-        <div  className={"keyboard-row"}> {[..."ASDFGHJKL"].map((k, i) => 
-        (<Key key={k} value={k} onChar={onChar} type={letterTypes[i+10]}/>))}</div>
+        <div  className={"keyboard-row"}> {[..."QWERTYUIOP"].map((k) => 
+        (<Key key={k} value={k} onChar={onChar} type={letterTypes[k]} reveal={reveal}/>))}</div>
+        <div  className={"keyboard-row"}> {[..."ASDFGHJKL"].map((k) => 
+        (<Key key={k} value={k} onChar={onChar} type={letterTypes[k]} reveal={reveal}/>))}</div>
         <div className={"keyboard-row"}>
             <Key key={"ENTER"} value={"ENTER"} onChar={onEnter}/>
-            {[..."ZXCVBNM"].map((k, i) => 
-            (<Key key={k} value={k} onChar={onChar} type={letterTypes[i+19]}/>))}
+            {[..."ZXCVBNM"].map((k) => 
+            (<Key key={k} value={k} onChar={onChar} type={letterTypes[k]} reveal={reveal}/>))}
             <Key key={"DELETE"} value={"DELETE"} onChar={onDelete}/>
         </div>
     </div>)

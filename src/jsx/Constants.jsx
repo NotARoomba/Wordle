@@ -1,10 +1,11 @@
 export const MAX_GUESSES = 6
 export const WORD_SIZE = 5  
+export const REVEAL_DELAY = 0.5;
 export const getLetterTypes = (answer, guesses) => {
     let letterObj = new Object()
-    for (let guess in guesses) {
+    for (let guess of guesses) {
        let guessTypes = getGuessTypes(answer, guess);
-       [...answer].forEach((l, i) => {
+       [...guess].forEach((l, i) => {
         if (!letterObj[l]) {
             letterObj[l] = guessTypes[i]
             return;
@@ -15,33 +16,36 @@ export const getLetterTypes = (answer, guesses) => {
         }
        })
     }
-    return  letterObj
+    return letterObj
 }
 export const getGuessTypes = (answer, word) => {
-    let guessTypes = []
-    const lettersTaken = [...answer].map((_) => false)
-    for (let i = 0; i < answer.length; i++) {
+    let guessTypes = Array(answer.length)
+    const lettersTaken = [...answer].map((_) => false);
         //check if has word and is in exact pos
         //then change color of word
-        if (answer[i] == word[i]) {
-            lettersTaken[i] = true
-            guessTypes.push(3)
-            continue;
-        } 
-        if (!answer.includes(word[i])) {
-            guessTypes.push(1)
-            continue;
-        }
-        const letterIndex = [...answer].findIndex((v, i) => v==word[i] && !lettersTaken[i])
-        if (letterIndex == -1) {
-            guessTypes.push(2)
-            lettersTaken[letterIndex] = true;
-            continue;
-        } else {
-            guessTypes.push(1)
-            continue;
-        }
-    }
+        [...word].forEach((l, i) => {
+            if (answer[i] === l) {
+                lettersTaken[i] = true
+                guessTypes[i] = 3
+                return;
+            } 
+        });
+        [...word].forEach((l, i) => {
+            if (guessTypes[i]) return;
+            if (!answer.includes(word[i])) {
+                guessTypes[i] = 1
+                return;
+            }
+            const letterIndex = [...answer].findIndex((v, i) => (v===l && !lettersTaken[i]))
+            if (letterIndex !== -1) {
+                guessTypes[i] = 2
+                lettersTaken[letterIndex] = true;
+                return;
+            } else {
+                guessTypes[i] = 1
+                return;
+            }
+        });
     return guessTypes
 }
 export const WORDS = [

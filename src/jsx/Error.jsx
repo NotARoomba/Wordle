@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function Error() {
-  return (<div>
-    Error
+export default function Error({desc}) {
+  return (<div className={"error"+(desc[1]?" animate":"")}>
+    {desc}
   </div>)
 }
