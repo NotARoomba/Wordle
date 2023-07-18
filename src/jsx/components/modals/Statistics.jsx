@@ -1,14 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Modal from 'react-modal';
 
-export default function Statistics({statistics, modalOpen, closeModal, won, answer}) {
+export default function Statistics({statistics, modalOpen, closeModal, gameStatus, answer}) {
     let guessData;
     if (statistics.stats.gamesWon == null) return <></>
     if (!statistics.stats.guessDistribution) guessData = [0, 0, 0, 0, 0, 0]
     else guessData = [1, 2, 3, 4, 5, 6].map((l) => statistics.stats.guessDistribution.filter(x => x == l).length)
     const maxValue = Math.max(...guessData, 1)
-    return (<Modal closeTimeoutMS={250} className={"statistics"} overlayClassName={"statistics-overlay"} isOpen={modalOpen} shouldCloseOnOverlayClick={true}>
+    return (<Modal closeTimeoutMS={250} className={"statistics"} overlayClassName={"statistics-overlay"} isOpen={modalOpen} shouldCloseOnEsc={true} shouldCloseOnOverlayClick={true}>
     <div className="statistics-content">
+        {gameStatus[0]||gameStatus[1]?<div className="game-finish-status">You {gameStatus[0]?"Won!":"Lost..."} The word was {answer}</div>:<></>}
         <div className="s-top-bar">
             <p>Statistics</p>
             <button className="right-edge-button"><img src="/assets/x-circle.svg" onClick={closeModal}/></button>
@@ -31,9 +33,6 @@ export default function Statistics({statistics, modalOpen, closeModal, won, answ
                 <p className="stats-title">Top Streak</p>
             </div>
         </div>
-        {/* <div className="game-info">
-            <p>You {won?"Won!":"Lost..."} The word was {answer}</p>
-        </div> */}
         <div className="bar-graph">
             <p className="bg-title">Guess Distribution</p>
             <div className="bar-lines-container">
@@ -48,7 +47,13 @@ export default function Statistics({statistics, modalOpen, closeModal, won, answ
                 ))}
             </div>
         </div>
-            
+    </div>
+    <div className="links">
+        <Link className="link" onClick={() => window.location.href = "https://notaroomba.xyz"}>Website</Link>
+        <p>•</p>
+        <p>NotARoomba</p>
+        <p>•</p>
+        <Link className="link" onClick={() => window.location.href = "https://github.com/NotARoomba/Wordle"}>GitHub</Link>
     </div>
     </Modal>)
 

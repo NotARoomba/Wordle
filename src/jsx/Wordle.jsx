@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Modal from 'react-modal';
 
 import Grid from "./components/grid/Grid.jsx"
 import Keyboard from './components/keyboard/Keyboard.jsx'
@@ -6,8 +7,7 @@ import Error from './Error.jsx';
 import { WORD_SIZE, WORDS, MAX_GUESSES } from './Constants.jsx';
 import Statistics from './components/modals/Statistics.jsx';
 import Letters from './Letters.jsx';
-
-import Modal from 'react-modal';
+import HowToPlay from './components/modals/HowToPlay.jsx';
 
 import '../css/App.css'
 
@@ -35,7 +35,8 @@ export default function Wordle() {
   const [guesses, setGuesses] = useState(Array())
   const [error, setError] = useState(["", false])
   const [reveal, setReveal] = useState(false)
-  const [modalOpen, setModal] = useState(false)
+  const [statsModal, setStatsModal] = useState(false)
+  const [infoModal, setInfoModal] = useState(false)
   const [gameState, setGameState] = useState([false, false])
   const [statistics, setStatistics] = useState(new GameData);
   //const [isChecking, setChecking] = useState(false)
@@ -100,7 +101,7 @@ export default function Wordle() {
         setGameState([true, false])
         updateStatistics(true)
         setTimeout(() => {
-          openModal()
+          setStatsModal(true)
           $(".top-text")[0].style.margin = 0;
           $("#play-again-button")[0].style.display = "flex"
         }, 4000);
@@ -111,7 +112,7 @@ export default function Wordle() {
         setGameState([false, true])
         updateStatistics(false)
         setTimeout(() => {
-          openModal()
+          setStatsModal(true)
           $(".top-text")[0].style.margin = 0;
           $("#play-again-button")[0].style.display = "flex"
         }, 4000);
@@ -119,11 +120,11 @@ export default function Wordle() {
       }
     }
   }
-  function closeModal() {
-    setModal(false)
+  function closeStatsModal() {
+    setStatsModal(false)
   }
-  function openModal() {
-    setModal(true)
+  function closeInfoModal() {
+    setInfoModal(false)
   }
   function updateStatistics(won) {
     let stats = {};
@@ -155,10 +156,12 @@ export default function Wordle() {
   return (
     <div className="wordle">
       <div className="top-text">
+      <button tabIndex="-1" onClick={(e) => { e.currentTarget.blur();setInfoModal(true)}}><img id="info-img" src="/assets/info.svg"/></button>
         <p>Wordle</p>
-        <button tabIndex="-1" onClick={(e) => { e.currentTarget.blur();openModal()}}><img id="bar-chart-img" src="/assets/bar-chart.svg"/></button>
+        <button tabIndex="-1" onClick={(e) => { e.currentTarget.blur();setStatsModal(true)}}><img id="bar-chart-img" src="/assets/bar-chart.svg"/></button>
       </div>
-      <Statistics statistics={statistics} won={gameState[0]} answer={answer} modalOpen={modalOpen} closeModal={closeModal}/>
+      <Statistics statistics={statistics} gameStatus={gameState} answer={answer} modalOpen={statsModal} closeModal={closeStatsModal}/>
+      <HowToPlay modalOpen={infoModal} closeModal={closeInfoModal}/>
       <div id="play-again-button" style={{display: "none"}} onClick={() => window.location.reload()}>Play Again</div>
         <Error desc={error}/>
        <Grid guesses={guesses} currentGuess={currentGuess} answer={answer} error={error} reveal={reveal}/>
