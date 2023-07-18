@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from "react-router-dom";
 
 import Grid from "./components/grid/Grid.jsx"
 import Keyboard from './components/keyboard/Keyboard.jsx'
@@ -11,7 +10,6 @@ import Letters from './Letters.jsx';
 import Modal from 'react-modal';
 
 import '../css/App.css'
-import Statistics from './components/modals/Statistics.jsx';
 
 class GameData {
   stats = {
