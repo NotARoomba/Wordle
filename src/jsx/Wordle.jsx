@@ -18,7 +18,8 @@ class GameData {
     currentStreak: 0,
     maxStreak: 0,
     totalGames: 0,
-    successRate: 0
+    successRate: 0,
+    shownInfoModal: false
   }
   constructor(stats) {
     if (stats == null) return null
@@ -56,6 +57,7 @@ export default function Wordle() {
   }, [])
   useEffect(() => {
     statistics
+    setInfoModal(!statistics.stats.shownInfoModal)
   }, [statistics])
   function onChar(value) {
     if (gameStateRef.current[0]||gameStateRef.current[1]) return;
@@ -135,7 +137,8 @@ export default function Wordle() {
         currentStreak: won?1:0,
         maxStreak: won?1:0,
         totalGames: 1,
-        successRate: won?100:0
+        successRate: won?100:0,
+        shownInfoModal: true
       }
     } else {
       let currentStreak = won?statisticsRef.current.stats.currentStreak+1:0;
@@ -147,7 +150,8 @@ export default function Wordle() {
         currentStreak,
         maxStreak: Math.max(currentStreak, statisticsRef.current.stats.currentStreak),
         totalGames,
-        successRate: Math.round((gamesWon/totalGames)*100)
+        successRate: Math.round((gamesWon/totalGames)*100),
+        shownInfoModal: true
       }
     }
     setStatistics(new GameData({...stats}))
