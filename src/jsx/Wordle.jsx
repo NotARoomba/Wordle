@@ -11,6 +11,7 @@ import Letters from './Letters.jsx';
 import Modal from 'react-modal';
 
 import '../css/App.css'
+import Statistics from './components/modals/Statistics.jsx';
 
 class GameData {
   stats = {
