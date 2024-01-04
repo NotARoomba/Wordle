@@ -30,7 +30,7 @@ export default function HowToPlay({modalOpen, closeModal}) {
     </div>
     
     <div className="links">
-        <Link className="link" onClick={() => window.location.href = "https://notaroomba.xyz"}>Website</Link>
+        <Link className="link" onClick={() => window.location.href = "https://notaroomba.dev"}>Website</Link>
         <p>•</p>
         <p>NotARoomba</p>
         <p>•</p>
