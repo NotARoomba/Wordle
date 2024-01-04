@@ -161,7 +161,7 @@ export default function Wordle() {
     <div className="wordle">
       <div className="top-text">
       <button tabIndex="-1" onClick={(e) => { e.currentTarget.blur();setInfoModal(true)}}><img id="info-img" src="/assets/info.svg"/></button>
-        <p>Wordle</p>
+        <p className="no-margin-bottom">Wordle</p>
         <button tabIndex="-1" onClick={(e) => { e.currentTarget.blur();setStatsModal(true)}}><img id="bar-chart-img" src="/assets/bar-chart.svg"/></button>
       </div>
       <Statistics statistics={statistics} gameStatus={gameState} answer={answer} modalOpen={statsModal} closeModal={closeStatsModal}/>
